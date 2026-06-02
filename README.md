@@ -127,3 +127,12 @@ Consultas principales:
 - La fecha se introduce en formato HTML `yyyy-mm-dd`, pero la aplicación la convierte automáticamente a `dd-mm-yyyy` para llamar a la API.
 - La app muestra la URL final utilizada en cada consulta para facilitar la documentación de la actividad.
 - Si la API bloquea las peticiones desde el navegador por CORS, será necesario usar un pequeño proxy backend o servir la aplicación desde un entorno permitido.
+
+
+## Cambios de esta versión
+
+- Se elimina el dato técnico “Margen” de las tarjetas de resultados.
+- La consulta de estaciones por comunidad incluye filtro de carburante.
+- Se actualiza la URL base oficial a `https://energia.serviciosmin.gob.es/ServiciosRestCarburantes/PreciosCarburantes`.
+- Se actualiza el service worker a estrategia network-first para evitar que se queden cacheados archivos antiguos tras publicar.
+- El municipio de la consulta histórica queda como filtro opcional real.

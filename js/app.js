@@ -279,7 +279,8 @@ function renderForm() {
         options: [],
         valueKey: getMunicipalityId,
         textKey: "Municipio",
-        placeholder: "Toda la provincia"
+        placeholder: "Toda la provincia",
+        required: false
       }),
       createSubmit("Consultar precios")
     );

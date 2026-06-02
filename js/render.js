@@ -11,7 +11,7 @@ export function showAlert(message, type = "") {
   alerts.innerHTML = message ? `<div class="alert ${type}">${message}</div>` : "";
 }
 
-export function createSelect({ id, label, options, valueKey, textKey, placeholder = "Selecciona una opción" }) {
+export function createSelect({ id, label, options, valueKey, textKey, placeholder = "Selecciona una opción", required = true }) {
   const wrapper = document.createElement("label");
   wrapper.className = "field";
   wrapper.htmlFor = id;
@@ -22,7 +22,7 @@ export function createSelect({ id, label, options, valueKey, textKey, placeholde
   const select = document.createElement("select");
   select.id = id;
   select.name = id;
-  select.required = true;
+  select.required = required;
 
   const first = document.createElement("option");
   first.value = "";

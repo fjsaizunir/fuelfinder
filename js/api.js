@@ -1,4 +1,4 @@
-export const API_BASE = "https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes";
+export const API_BASE = "https://energia.serviciosmin.gob.es/ServiciosRestCarburantes/PreciosCarburantes";
 
 export function buildUrl(endpoint) {
   return `${API_BASE}/${endpoint}`;

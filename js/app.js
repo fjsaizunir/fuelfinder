@@ -212,9 +212,18 @@ function renderForm() {
         textKey: "CCAA",
         placeholder: "Selecciona una comunidad"
       }),
+      createSelect({
+        id: "producto",
+        label: "Carburante",
+        options: state.productos,
+        valueKey: getProductId,
+        textKey: "NombreProducto",
+        placeholder: "Selecciona un carburante"
+      }),
       createSubmit("Buscar estaciones")
     );
     setDefaultOption("ccaa", "CASTILLA Y LEÓN");
+    setDefaultProduct("Gasolina 95 E5");
   }
 
   if (state.view === "maritimos") {
@@ -282,7 +291,7 @@ function renderForm() {
 
 function getTitleForView() {
   return {
-    ccaa: "Estaciones de servicio por comunidad",
+    ccaa: "Estaciones de servicio por comunidad y carburante",
     maritimos: "Postes marítimos por provincia y producto",
     historico: "Precios por provincia, fecha y carburante"
   }[state.view];
@@ -337,7 +346,8 @@ async function handleSubmit(event) {
 
     if (state.view === "ccaa") {
       const idCCAA = document.getElementById("ccaa").value;
-      endpoint = endpoints.estacionesPorCCAA(idCCAA);
+      const idProducto = document.getElementById("producto").value;
+      endpoint = endpoints.estacionesPorCCAAProducto(idCCAA, idProducto);
     }
 
     if (state.view === "maritimos") {

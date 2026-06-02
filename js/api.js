@@ -26,6 +26,7 @@ export const endpoints = {
   productos: () => "Listados/ProductosPetroliferos/",
   municipiosPorProvincia: (idProvincia) => `Listados/MunicipiosPorProvincia/${idProvincia}`,
   estacionesPorCCAA: (idCCAA) => `EstacionesTerrestres/FiltroCCAA/${idCCAA}`,
+  estacionesPorCCAAProducto: (idCCAA, idProducto) => `EstacionesTerrestres/FiltroCCAAProducto/${idCCAA}/${idProducto}`,
   postesProvinciaProducto: (idProvincia, idProducto) => `PostesMaritimos/FiltroProvinciaProducto/${idProvincia}/${idProducto}`,
   historicoProvinciaProducto: (fecha, idProvincia, idProducto) => `EstacionesTerrestresHist/FiltroProvinciaProducto/${fecha}/${idProvincia}/${idProducto}`,
   historicoMunicipioProducto: (fecha, idMunicipio, idProducto) => `EstacionesTerrestresHist/FiltroMunicipioProducto/${fecha}/${idMunicipio}/${idProducto}`

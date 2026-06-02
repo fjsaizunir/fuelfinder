@@ -108,7 +108,6 @@ export function renderResults(items, { mode, productName = "" } = {}) {
     const direccion = item.Dirección || item.Direccion || item["Dirección"] || "Dirección no disponible";
     const horario = item.Horario || item["Horario"] || "Horario no disponible";
     const cp = item["C.P."] || item.CP || "";
-    const margen = item.Margen || "";
     const precio = findPriceForProduct(item, productName);
 
     const showPrice = mode === "historico" || mode === "maritimos" || precio.value !== null;
@@ -125,7 +124,6 @@ export function renderResults(items, { mode, productName = "" } = {}) {
       </ul>
       <div class="chip-row">
         ${productName ? `<span class="chip">${escapeHtml(productName)}</span>` : ""}
-        ${margen ? `<span class="chip">Margen ${escapeHtml(margen)}</span>` : ""}
         ${item.Latitud && item.Longitud ? `<span class="chip">GPS disponible</span>` : ""}
       </div>
     `;

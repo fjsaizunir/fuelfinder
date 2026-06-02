@@ -4,7 +4,7 @@ Webapp responsive desarrollada con HTML, CSS y JavaScript puro para consultar da
 
 ## Funcionalidades
 
-1. Consulta de estaciones terrestres por comunidad autónoma.
+1. Consulta de estaciones terrestres por comunidad autónoma y carburante.
 2. Consulta de postes marítimos por provincia y producto.
 3. Consulta histórica de precios por fecha, provincia y carburante.
 4. Filtro rápido sobre resultados.

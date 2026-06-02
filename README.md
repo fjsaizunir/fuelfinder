@@ -11,20 +11,32 @@ Webapp responsive desarrollada con HTML, CSS y JavaScript puro para consultar da
 5. Ordenación por precio.
 6. Visualización de la URL REST utilizada en cada consulta.
 7. Modo claro/oscuro.
-8. Navegación tipo app con barra inferior fija en móvil.
+8. Navegación inferior fija en móvil.
+9. Interfaz tipo Liquid Glass.
+10. Instalación como PWA en terminal móvil.
+11. Metadatos SEO, Open Graph, manifest PWA, robots.txt y sitemap.xml.
+12. Página básica de aviso legal y privacidad.
 
 ## Estructura
 
-```txt
-fuel-finder/
+```text
+fuelfinder-webapp/
 ├── index.html
+├── legal.html
+├── manifest.webmanifest
+├── service-worker.js
+├── robots.txt
+├── sitemap.xml
 ├── css/
 │   └── styles.css
-└── js/
-    ├── api.js
-    ├── app.js
-    ├── render.js
-    └── utils.js
+├── js/
+│   ├── api.js
+│   ├── app.js
+│   ├── render.js
+│   └── utils.js
+└── assets/
+    ├── icons/
+    └── social/
 ```
 
 ## Ejecución local
@@ -40,7 +52,7 @@ python3 -m http.server 8080
 
 Después abre:
 
-```txt
+```text
 http://localhost:8080
 ```
 
@@ -54,27 +66,47 @@ npx serve .
 
 Sube todo el contenido de la carpeta `fuelfinder-webapp` al directorio público del hosting, por ejemplo:
 
-```txt
+```text
 /var/www/vhosts/tudominio.com/httpdocs/fuelfinder/
 ```
 
 Después accede desde:
 
-```txt
+```text
 https://tudominio.com/fuelfinder/
 ```
+
+## Instalación como webapp móvil
+
+La app incluye `manifest.webmanifest` y `service-worker.js`. En móviles compatibles, aparecerá un botón de instalación en la cabecera. En iOS se muestra una ayuda para añadir la app a la pantalla de inicio desde el menú de compartir del navegador.
+
+## SEO y Open Graph
+
+La página incluye:
+
+- `title` y `description` optimizados.
+- URL canónica.
+- Open Graph y Twitter Card.
+- Imagen social `assets/social/og-fuelfinder.png`.
+- `robots.txt`.
+- `sitemap.xml`.
+- JSON-LD de tipo `WebApplication`.
+
+## Privacidad y LOPD/RGPD
+
+Se incluye `legal.html` con una política básica. La aplicación no solicita datos personales, no incorpora analítica y no utiliza cookies de seguimiento. Solo puede guardar preferencias locales, como el modo claro/oscuro, en el navegador del usuario.
 
 ## Endpoints utilizados
 
 Base:
 
-```txt
+```text
 https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes
 ```
 
 Listados:
 
-```txt
+```text
 /Listados/ComunidadesAutonomas/
 /Listados/Provincias/
 /Listados/ProductosPetroliferos/
@@ -83,7 +115,7 @@ Listados:
 
 Consultas principales:
 
-```txt
+```text
 /EstacionesTerrestres/FiltroCCAA/{IDCCAA}
 /PostesMaritimos/FiltroProvinciaProducto/{IDProvincia}/{IDProducto}
 /EstacionesTerrestresHist/FiltroProvinciaProducto/{FECHA}/{IDProvincia}/{IDProducto}

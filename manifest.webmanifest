@@ -1,0 +1,42 @@
+{
+  "id": "https://fransaiz.com/fuelfinder/",
+  "name": "FuelFinder - Consulta de carburantes",
+  "short_name": "FuelFinder",
+  "description": "Consulta estaciones de servicio, postes marítimos y precios históricos de carburantes mediante datos oficiales.",
+  "lang": "es",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0b1220",
+  "theme_color": "#0f766e",
+  "categories": ["utilities", "navigation", "travel"],
+  "icons": [
+    {
+      "src": "assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Estaciones",
+      "short_name": "Estaciones",
+      "description": "Consultar estaciones por comunidad autónoma",
+      "url": "./?view=ccaa"
+    },
+    {
+      "name": "Precios",
+      "short_name": "Precios",
+      "description": "Consultar precios históricos",
+      "url": "./?view=historico"
+    }
+  ]
+}

@@ -21,12 +21,18 @@ const sortPrice = document.getElementById("sortPrice");
 const lastUrl = document.getElementById("lastUrl");
 const copyUrl = document.getElementById("copyUrl");
 const themeToggle = document.getElementById("themeToggle");
+const installAppBtn = document.getElementById("installAppBtn");
+const installHelp = document.getElementById("installHelp");
+const closeInstallHelp = document.getElementById("closeInstallHelp");
+
+let deferredInstallPrompt = null;
 
 init();
 
 async function init() {
   bindEvents();
   restoreTheme();
+  initPwa();
   await loadInitialData();
   renderForm();
 }
@@ -81,6 +87,69 @@ function bindEvents() {
     localStorage.setItem("fuelfinder-theme", enabled ? "dark" : "light");
     themeToggle.textContent = enabled ? "☀" : "☾";
   });
+
+  installAppBtn?.addEventListener("click", handleInstallClick);
+  closeInstallHelp?.addEventListener("click", () => installHelp.hidden = true);
+  installHelp?.addEventListener("click", (event) => {
+    if (event.target === installHelp) installHelp.hidden = true;
+  });
+}
+
+function initPwa() {
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("service-worker.js").catch(() => {
+        // La aplicación sigue funcionando aunque el navegador no registre el service worker.
+      });
+    });
+  }
+
+  if (!isMobileDevice() || isRunningStandalone()) {
+    return;
+  }
+
+  const isiOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+
+  window.addEventListener("beforeinstallprompt", (event) => {
+    event.preventDefault();
+    deferredInstallPrompt = event;
+    document.body.classList.add("mobile-install-available");
+    installAppBtn.hidden = false;
+  });
+
+  window.addEventListener("appinstalled", () => {
+    deferredInstallPrompt = null;
+    installAppBtn.hidden = true;
+    document.body.classList.remove("mobile-install-available");
+  });
+
+  if (isiOS) {
+    document.body.classList.add("mobile-install-available");
+    installAppBtn.hidden = false;
+  }
+}
+
+async function handleInstallClick() {
+  if (!isMobileDevice()) return;
+
+  if (deferredInstallPrompt) {
+    deferredInstallPrompt.prompt();
+    await deferredInstallPrompt.userChoice;
+    deferredInstallPrompt = null;
+    installAppBtn.hidden = true;
+    document.body.classList.remove("mobile-install-available");
+    return;
+  }
+
+  installHelp.hidden = false;
+}
+
+function isMobileDevice() {
+  return window.matchMedia("(max-width: 759px)").matches || /android|iphone|ipad|ipod/i.test(navigator.userAgent);
+}
+
+function isRunningStandalone() {
+  return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
 }
 
 

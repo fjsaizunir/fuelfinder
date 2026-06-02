@@ -2,41 +2,88 @@
 <html lang="es">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>FuelFinder | Consulta de carburantes</title>
-  <meta name="description" content="Webapp responsive para consultar estaciones de servicio, postes marítimos y precios históricos de carburantes usando la API REST oficial." />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>FuelFinder | Consulta precios de carburantes en España</title>
+  <meta name="description" content="Webapp responsive para consultar estaciones de servicio, postes marítimos y precios históricos de carburantes mediante la API REST oficial del Ministerio." />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta name="author" content="Francisco José Saiz Ezquerra de Paz" />
+  <meta name="theme-color" content="#0f766e" />
+  <meta name="color-scheme" content="light dark" />
+  <link rel="canonical" href="https://fransaiz.com/fuelfinder/" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="es_ES" />
+  <meta property="og:site_name" content="FuelFinder" />
+  <meta property="og:title" content="FuelFinder | Consulta precios de carburantes" />
+  <meta property="og:description" content="Busca estaciones terrestres, postes marítimos y precios históricos de carburantes en España con una webapp responsive." />
+  <meta property="og:url" content="https://fransaiz.com/fuelfinder/" />
+  <meta property="og:image" content="https://fransaiz.com/fuelfinder/assets/social/og-fuelfinder.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="FuelFinder | Consulta precios de carburantes" />
+  <meta name="twitter:description" content="Webapp responsive para consultar carburantes con datos oficiales." />
+  <meta name="twitter:image" content="https://fransaiz.com/fuelfinder/assets/social/og-fuelfinder.png" />
+
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="assets/icons/icon-512.png" />
   <link rel="stylesheet" href="css/styles.css" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "FuelFinder",
+    "url": "https://fransaiz.com/fuelfinder/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Web",
+    "description": "Webapp responsive para consultar estaciones de servicio, postes marítimos y precios históricos de carburantes mediante API REST.",
+    "inLanguage": "es"
+  }
+  </script>
 </head>
 <body>
   <header class="hero">
     <nav class="topbar" aria-label="Navegación principal">
-      <a href="#" class="brand" aria-label="FuelFinder inicio">
-        <span class="brand-icon" aria-hidden="true">⛽</span>
+      <a href="./" class="brand" aria-label="FuelFinder inicio">
+        <span class="brand-icon liquid-icon" aria-hidden="true">⛽</span>
         <span>FuelFinder</span>
       </a>
-      <button id="themeToggle" class="ghost-button" type="button" aria-label="Cambiar tema">☾</button>
+      <div class="top-actions">
+        <button id="installAppBtn" class="install-button" type="button" aria-label="Instalar FuelFinder" hidden>
+          <span aria-hidden="true">⬇</span>
+          <span>Instalar</span>
+        </button>
+        <button id="themeToggle" class="ghost-button" type="button" aria-label="Cambiar tema">☾</button>
+      </div>
     </nav>
 
     <section class="hero-content">
       <div>
         <span class="eyebrow">API REST · Carburantes España</span>
-        <h1>Consulta precios y estaciones de forma rápida, clara y responsive.</h1>
+        <h1>Consulta carburantes oficiales en segundos.</h1>
         <p>
-          Webapp para buscar estaciones terrestres por comunidad autónoma, postes marítimos por provincia y precios históricos por fecha, provincia y carburante.
+          Busca estaciones terrestres, postes marítimos y precios históricos con una interfaz móvil sencilla, rápida y preparada como webapp instalable.
         </p>
       </div>
       <div class="hero-card" aria-label="Resumen de funcionalidades">
         <div class="metric">
+          <span class="metric-icon liquid-icon" aria-hidden="true">🛣️</span>
           <strong>3</strong>
           <span>consultas principales</span>
         </div>
         <div class="metric">
-          <strong>100%</strong>
-          <span>HTML, CSS y JS</span>
+          <span class="metric-icon liquid-icon" aria-hidden="true">🌙</span>
+          <strong>Dark</strong>
+          <span>modo oscuro</span>
         </div>
         <div class="metric">
-          <strong>REST</strong>
-          <span>datos oficiales</span>
+          <span class="metric-icon liquid-icon" aria-hidden="true">📲</span>
+          <strong>PWA</strong>
+          <span>instalable en móvil</span>
         </div>
       </div>
     </section>
@@ -45,15 +92,15 @@
   <main class="app-shell">
     <section class="tabs" aria-label="Tipos de consulta">
       <button class="tab-button active" type="button" data-view="ccaa">
-        <span class="tab-icon" aria-hidden="true">🛣️</span>
+        <span class="tab-icon liquid-icon" aria-hidden="true">🛣️</span>
         <span class="tab-label">Estaciones</span>
       </button>
       <button class="tab-button" type="button" data-view="maritimos">
-        <span class="tab-icon" aria-hidden="true">⚓</span>
+        <span class="tab-icon liquid-icon" aria-hidden="true">⚓</span>
         <span class="tab-label">Marítimos</span>
       </button>
       <button class="tab-button" type="button" data-view="historico">
-        <span class="tab-icon" aria-hidden="true">📅</span>
+        <span class="tab-icon liquid-icon" aria-hidden="true">€</span>
         <span class="tab-label">Precios</span>
       </button>
     </section>
@@ -99,8 +146,27 @@
     </section>
   </main>
 
+  <aside id="installHelp" class="install-help" role="dialog" aria-modal="true" aria-labelledby="installHelpTitle" hidden>
+    <div class="install-help-card panel">
+      <button id="closeInstallHelp" class="close-button" type="button" aria-label="Cerrar">×</button>
+      <span class="liquid-icon install-help-icon" aria-hidden="true">📲</span>
+      <h2 id="installHelpTitle">Instalar en tu móvil</h2>
+      <p id="installHelpText">Puedes añadir FuelFinder a la pantalla de inicio para abrirlo como una app.</p>
+      <ol>
+        <li>Abre el menú de tu navegador.</li>
+        <li>Elige “Añadir a pantalla de inicio” o “Instalar app”.</li>
+        <li>Confirma la instalación.</li>
+      </ol>
+    </div>
+  </aside>
+
   <footer class="footer">
     <p>Proyecto académico · Tecnologías Emergentes · Consulta de datos mediante API REST</p>
+    <p class="footer-links">
+      <a href="legal.html">Aviso legal y privacidad</a>
+      <span aria-hidden="true">·</span>
+      <a href="manifest.webmanifest">Manifest PWA</a>
+    </p>
   </footer>
 
   <template id="fieldTemplate">

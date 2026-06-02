@@ -1,61 +1,69 @@
-# Guía rápida de instalación
+# Instalación de FuelFinder
 
-## 1. Ejecutar en local
+## 1. Instalación local
 
-Abre una terminal dentro de la carpeta del proyecto y ejecuta:
+Descomprime el proyecto y entra en la carpeta principal:
+
+```bash
+cd fuelfinder-webapp
+```
+
+Ejecuta un servidor local:
 
 ```bash
 python3 -m http.server 8080
 ```
 
-Después abre en el navegador:
+Abre la aplicación desde:
 
-```txt
+```text
 http://localhost:8080
 ```
 
-## 2. Subir a un servidor web
+## 2. Instalación en servidor web
 
-Copia estos archivos y carpetas al servidor:
+Sube todos los archivos de la carpeta `fuelfinder-webapp` al directorio público donde quieras publicar la aplicación.
 
-```txt
-index.html
-css/
-js/
-README.md
-INSTALACION.md
+Ejemplo:
+
+```text
+/var/www/vhosts/fransaiz.com/httpdocs/fuelfinder/
 ```
 
-No requiere base de datos ni instalación de dependencias.
+La URL quedaría así:
 
-## 3. Uso básico
+```text
+https://fransaiz.com/fuelfinder/
+```
 
-### Estaciones por CCAA
+## 3. PWA e instalación móvil
 
-1. Selecciona una comunidad autónoma.
-2. Pulsa `Buscar estaciones`.
-3. Revisa los resultados y la URL REST utilizada.
+La aplicación incluye:
 
-### Postes marítimos
+- `manifest.webmanifest`
+- `service-worker.js`
+- Iconos en `assets/icons/`
+- Botón de instalación visible solo en móvil cuando el navegador lo permite
 
-1. Selecciona provincia.
-2. Selecciona carburante.
-3. Pulsa `Buscar postes`.
+Para que la instalación PWA funcione correctamente, la aplicación debe servirse mediante HTTPS.
 
-### Precios por fecha
+## 4. SEO y privacidad
 
-1. Selecciona provincia.
-2. Selecciona fecha.
-3. Selecciona carburante.
-4. Opcionalmente selecciona municipio.
-5. Pulsa `Consultar precios`.
+Se incluyen:
 
-## 4. Capturas para la memoria
+- Metadatos SEO en `index.html`
+- Open Graph y Twitter Card
+- Imagen social en `assets/social/og-fuelfinder.png`
+- `robots.txt`
+- `sitemap.xml`
+- Página `legal.html` con aviso legal y privacidad básica
 
-Para documentar la práctica se recomienda capturar:
+## 5. Pruebas recomendadas
 
-1. Pantalla principal de la aplicación.
-2. Consulta de estaciones por comunidad autónoma.
-3. Consulta de postes marítimos por provincia y producto.
-4. Consulta histórica por fecha, provincia y carburante.
-5. Bloque donde aparece la URL REST utilizada.
+1. Abrir la app en escritorio.
+2. Abrir la app en móvil real.
+3. Probar modo claro/oscuro.
+4. Probar botón de instalación móvil.
+5. Validar que se cargan las tres consultas.
+6. Comprobar en consola que no hay errores JavaScript.
+7. Verificar en Lighthouse: SEO, Best Practices y PWA.

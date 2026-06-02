@@ -11,6 +11,7 @@ Webapp responsive desarrollada con HTML, CSS y JavaScript puro para consultar da
 5. Ordenación por precio.
 6. Visualización de la URL REST utilizada en cada consulta.
 7. Modo claro/oscuro.
+8. Navegación tipo app con barra inferior fija en móvil.
 
 ## Estructura
 

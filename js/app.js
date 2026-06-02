@@ -45,6 +45,7 @@ function bindEvents() {
       renderResults([], { mode: state.view });
       document.getElementById("resultCount").textContent = "Configura los filtros y pulsa buscar.";
       showAlert("");
+      scrollToFiltersOnMobile();
     });
   });
 
@@ -80,6 +81,21 @@ function bindEvents() {
     localStorage.setItem("fuelfinder-theme", enabled ? "dark" : "light");
     themeToggle.textContent = enabled ? "☀" : "☾";
   });
+}
+
+
+function scrollToFiltersOnMobile() {
+  if (window.innerWidth > 759) return;
+
+  const panel = document.querySelector(".filters-panel");
+  if (!panel) return;
+
+  window.setTimeout(() => {
+    panel.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }, 120);
 }
 
 function restoreTheme() {

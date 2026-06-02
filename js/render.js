@@ -84,6 +84,27 @@ export function createSubmit(text = "Buscar") {
   return button;
 }
 
+export function createLocationButton(text = "Usar mi ubicación") {
+  const wrapper = document.createElement("div");
+  wrapper.className = "field location-field";
+
+  const span = document.createElement("span");
+  span.textContent = "Ubicación";
+
+  const button = document.createElement("button");
+  button.id = "useLocation";
+  button.type = "button";
+  button.className = "location-button";
+  button.innerHTML = `<span aria-hidden="true">📍</span><span>${text}</span>`;
+
+  const note = document.createElement("small");
+  note.className = "field-note";
+  note.textContent = "Solo se usa para seleccionar la comunidad autónoma.";
+
+  wrapper.append(span, button, note);
+  return wrapper;
+}
+
 export function renderResults(items, { mode, productName = "" } = {}) {
   const results = document.getElementById("results");
   const resultCount = document.getElementById("resultCount");

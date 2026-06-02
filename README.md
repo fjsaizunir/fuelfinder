@@ -136,3 +136,9 @@ Consultas principales:
 - Se actualiza la URL base oficial a `https://energia.serviciosmin.gob.es/ServiciosRestCarburantes/PreciosCarburantes`.
 - Se actualiza el service worker a estrategia network-first para evitar que se queden cacheados archivos antiguos tras publicar.
 - El municipio de la consulta histórica queda como filtro opcional real.
+
+## Geolocalización opcional
+
+En la consulta de estaciones por comunidad autónoma se incluye el botón **Usar mi ubicación**. Al pulsarlo, el navegador solicita permiso para obtener la ubicación aproximada del dispositivo y seleccionar automáticamente la comunidad autónoma correspondiente.
+
+La ubicación no se guarda en el servidor. Solo se conserva en `localStorage` el nombre de la comunidad autónoma detectada para preseleccionarla en visitas posteriores. El usuario puede cambiarla manualmente en cualquier momento.

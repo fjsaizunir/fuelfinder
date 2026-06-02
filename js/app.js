@@ -1,5 +1,5 @@
 import { buildUrl, endpoints, getJson } from "./api.js";
-import { createDateInput, createSelect, createSubmit, renderResults, setStatus, showAlert } from "./render.js";
+import { createDateInput, createLocationButton, createSelect, createSubmit, renderResults, setStatus, showAlert } from "./render.js";
 import { findPriceForProduct, formatSpanishDateForApi, getMunicipalityId, getProductId, getProvinceId, normalizeApiList, parseSpanishNumber, textIncludes, uniqueBy } from "./utils.js";
 
 const state = {
@@ -12,7 +12,9 @@ const state = {
   filteredResults: [],
   lastEndpoint: "",
   selectedProductName: "",
-  sortAsc: true
+  sortAsc: true,
+  detectedCCAA: localStorage.getItem("fuelfinder-detected-ccaa") || "",
+  locationRequested: localStorage.getItem("fuelfinder-location-requested") === "true"
 };
 
 const filtersForm = document.getElementById("filtersForm");
@@ -34,6 +36,7 @@ async function init() {
   restoreTheme();
   initPwa();
   await loadInitialData();
+  await detectLocationSilentlyIfPermissionGranted();
   renderForm();
 }
 
@@ -56,6 +59,12 @@ function bindEvents() {
   });
 
   filtersForm.addEventListener("submit", handleSubmit);
+
+  filtersForm.addEventListener("click", async (event) => {
+    if (event.target.closest("#useLocation")) {
+      await detectAndApplyLocation({ userInitiated: true });
+    }
+  });
 
   filtersForm.addEventListener("change", async (event) => {
     if (event.target.id === "provincia" && state.view === "historico") {
@@ -93,6 +102,21 @@ function bindEvents() {
   installHelp?.addEventListener("click", (event) => {
     if (event.target === installHelp) installHelp.hidden = true;
   });
+}
+
+
+async function detectLocationSilentlyIfPermissionGranted() {
+  if (state.detectedCCAA || !isMobileDevice() || !("geolocation" in navigator)) return;
+
+  try {
+    if (!("permissions" in navigator)) return;
+    const permission = await navigator.permissions.query({ name: "geolocation" });
+    if (permission.state === "granted") {
+      await detectAndApplyLocation({ userInitiated: false, silent: true });
+    }
+  } catch {
+    // Si el navegador no permite consultar permisos, no se solicita ubicación automáticamente.
+  }
 }
 
 function initPwa() {
@@ -220,9 +244,10 @@ function renderForm() {
         textKey: "NombreProducto",
         placeholder: "Selecciona un carburante"
       }),
+      createLocationButton(state.detectedCCAA ? `Ubicación: ${state.detectedCCAA}` : "Usar mi ubicación"),
       createSubmit("Buscar estaciones")
     );
-    setDefaultOption("ccaa", "CASTILLA Y LEÓN");
+    setDefaultOption("ccaa", state.detectedCCAA || "CASTILLA Y LEÓN");
     setDefaultProduct("Gasolina 95 E5");
   }
 
@@ -334,6 +359,136 @@ async function updateMunicipios(idProvincia) {
   } catch {
     showAlert("No se pudieron cargar los municipios de la provincia seleccionada. La búsqueda por provincia seguirá funcionando.", "error");
   }
+}
+
+
+async function detectAndApplyLocation({ userInitiated = false, silent = false } = {}) {
+  if (!("geolocation" in navigator)) {
+    if (!silent) showAlert("Tu navegador no permite consultar la ubicación del dispositivo.", "error");
+    return;
+  }
+
+  const button = document.getElementById("useLocation");
+  const previousText = button?.innerHTML;
+  if (button) {
+    button.disabled = true;
+    button.innerHTML = `<span aria-hidden="true">⌛</span><span>Detectando...</span>`;
+  }
+
+  if (userInitiated || !silent) {
+    showAlert("El navegador te pedirá permiso para usar tu ubicación. Solo se usará para seleccionar la comunidad autónoma.");
+  }
+
+  try {
+    localStorage.setItem("fuelfinder-location-requested", "true");
+    state.locationRequested = true;
+
+    const position = await getCurrentPosition();
+    const ccaa = await getAutonomousCommunityFromCoordinates(position.coords.latitude, position.coords.longitude);
+
+    if (!ccaa) {
+      throw new Error("No se pudo determinar la comunidad autónoma a partir de la ubicación.");
+    }
+
+    state.detectedCCAA = ccaa;
+    localStorage.setItem("fuelfinder-detected-ccaa", ccaa);
+
+    const select = document.getElementById("ccaa");
+    if (select) setDefaultOption("ccaa", ccaa);
+
+    if (button) {
+      button.innerHTML = `<span aria-hidden="true">✅</span><span>${ccaa}</span>`;
+    }
+
+    showAlert(`Comunidad autónoma detectada: ${ccaa}. Puedes cambiarla manualmente si lo necesitas.`);
+  } catch (error) {
+    if (button && previousText) button.innerHTML = previousText;
+    if (!silent || userInitiated) {
+      showAlert(`No se pudo usar la ubicación. Puedes seleccionar la comunidad manualmente. Detalle: ${error.message}`, "error");
+    }
+  } finally {
+    if (button) button.disabled = false;
+  }
+}
+
+function getCurrentPosition() {
+  return new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(resolve, reject, {
+      enableHighAccuracy: false,
+      timeout: 9000,
+      maximumAge: 1000 * 60 * 60
+    });
+  });
+}
+
+async function getAutonomousCommunityFromCoordinates(latitude, longitude) {
+  const url = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${encodeURIComponent(latitude)}&longitude=${encodeURIComponent(longitude)}&localityLanguage=es`;
+  const response = await fetch(url, { headers: { "Accept": "application/json" } });
+
+  if (!response.ok) {
+    throw new Error(`El servicio de geolocalización ha devuelto el estado ${response.status}`);
+  }
+
+  const data = await response.json();
+  const candidates = [
+    data.principalSubdivision,
+    data.localityInfo?.administrative?.find((item) => item.order === 4)?.name,
+    data.localityInfo?.administrative?.find((item) => item.adminLevel === 4)?.name,
+    data.localityInfo?.administrative?.map((item) => item.name).join(" ")
+  ].filter(Boolean);
+
+  for (const candidate of candidates) {
+    const mapped = mapToApiCommunityName(candidate);
+    if (mapped) return mapped;
+  }
+
+  return "";
+}
+
+function mapToApiCommunityName(value) {
+  const normalized = normalizeText(value);
+  const aliases = [
+    ["ANDALUCIA", "ANDALUCÍA"],
+    ["ARAGON", "ARAGÓN"],
+    ["ASTURIAS", "PRINCIPADO DE ASTURIAS"],
+    ["BALEARES", "ILLES BALEARS"],
+    ["ILLES BALEARS", "ILLES BALEARS"],
+    ["CANARIAS", "CANARIAS"],
+    ["CANTABRIA", "CANTABRIA"],
+    ["CASTILLA LA MANCHA", "CASTILLA LA MANCHA"],
+    ["CASTILLA-LA MANCHA", "CASTILLA LA MANCHA"],
+    ["CASTILLA Y LEON", "CASTILLA Y LEÓN"],
+    ["CASTILE AND LEON", "CASTILLA Y LEÓN"],
+    ["CATALUNA", "CATALUÑA"],
+    ["CATALUNYA", "CATALUÑA"],
+    ["CATALONIA", "CATALUÑA"],
+    ["COMUNITAT VALENCIANA", "COMUNITAT VALENCIANA"],
+    ["COMUNIDAD VALENCIANA", "COMUNITAT VALENCIANA"],
+    ["VALENCIAN COMMUNITY", "COMUNITAT VALENCIANA"],
+    ["EXTREMADURA", "EXTREMADURA"],
+    ["GALICIA", "GALICIA"],
+    ["MADRID", "COMUNIDAD DE MADRID"],
+    ["MURCIA", "REGIÓN DE MURCIA"],
+    ["NAVARRA", "COMUNIDAD FORAL DE NAVARRA"],
+    ["PAIS VASCO", "PAÍS VASCO"],
+    ["EUSKADI", "PAÍS VASCO"],
+    ["BASQUE", "PAÍS VASCO"],
+    ["LA RIOJA", "LA RIOJA"],
+    ["CEUTA", "CEUTA"],
+    ["MELILLA", "MELILLA"]
+  ];
+
+  const match = aliases.find(([alias]) => normalized.includes(alias));
+  return match ? match[1] : "";
+}
+
+function normalizeText(value) {
+  return String(value || "")
+    .toUpperCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^A-Z0-9]+/g, " ")
+    .trim();
 }
 
 async function handleSubmit(event) {

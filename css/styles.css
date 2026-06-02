@@ -1014,3 +1014,60 @@ input,
   color: var(--muted);
   line-height: 1.65;
 }
+
+.location-field {
+  gap: .35rem;
+}
+
+.location-button {
+  border: 1px solid color-mix(in srgb, var(--primary) 42%, var(--border));
+  border-radius: 14px;
+  min-height: 2.75rem;
+  padding: .75rem 1rem;
+  cursor: pointer;
+  font-weight: 800;
+  color: var(--primary-dark);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, .72), rgba(255, 255, 255, .28)),
+    rgba(45, 212, 191, .12);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5), 0 10px 26px rgba(15, 118, 110, .12);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .45rem;
+  width: 100%;
+  transition: transform .18s ease, border-color .18s ease, background .18s ease;
+}
+
+.location-button:hover {
+  transform: translateY(-1px);
+  border-color: var(--primary);
+}
+
+.location-button:disabled {
+  cursor: wait;
+  opacity: .72;
+  transform: none;
+}
+
+.field-note {
+  color: var(--muted);
+  font-size: .72rem;
+  line-height: 1.35;
+}
+
+body.dark .location-button {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, .08), rgba(255, 255, 255, .02)),
+    rgba(45, 212, 191, .14);
+}
+
+@media (max-width: 759px) {
+  .location-field {
+    grid-column: 1 / -1;
+  }
+
+  .location-button {
+    min-height: 3rem;
+  }
+}

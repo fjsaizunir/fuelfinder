@@ -1,4 +1,4 @@
-const CACHE_NAME = "fuelfinder-v4-sin-margen-combustible";
+const CACHE_NAME = "fuelfinder-v5-sin-margen-combustible";
 const APP_SHELL = [
   "./",
   "./index.html",
